@@ -2,18 +2,16 @@ from Node import Node
 from Distancias import direta, real, lines
 
 
-# start = input("Start:")
-# line = input("Line:")
-# goal = input("Goal:")
+start = input("Start:")
+line = input("Line:")
+goal = input("Goal:")
 
-# start = int(start.replace("E", "")) -1
-# goal = int(goal.replace("E", "")) -1
+start = int(start.replace("E", "")) -1
+goal = int(goal.replace("E", "")) -1
 
-start = 0
-goal = 9
-
+edge  = ()
 currentNode = Node.make_node(start, 0, 0)
-border = [currentNode]
+border = [(currentNode, currentNode)]
 path = [(currentNode, currentNode)]
 visited = []
 
@@ -51,37 +49,38 @@ def getAdjecents(node):
             newNode = Node.make_node(no[0], 0, 0)
             newNode.time = g(newNode)
             adjacentsNode.insert(0,newNode)
-            path.insert(0,(newNode, node))
         ## ver linha depois
     return adjacentsNode
 
 def insertNode(node):
     if len(border) == 0:
-        border.append(node)
+        border.append((node, currentNode))
     else: 
         for i in range(len(border)):
-            if (f(node) < f(border[i])):
-                border.insert(i, node)
+            if (f(node) < f(border[i][0])):
+                border.insert(i,(node, currentNode))
                 break
             elif ((len(border) - 1) == i):
-                border.append(node)
+                border.append((node, currentNode))
 
 
 while(len(border) > 0):
-    currentNode = border.pop(0)
+    edge = border.pop(0)
+    currentNode = edge[0]
     visited.insert(0, currentNode.station)
-    print(currentNode.station)
+    path.insert(0, edge)
+
     if(currentNode.station == goal):
         break
 
     adjacents = getAdjecents(currentNode)
-    # for i in adjacents:
-    #     print(i.station)
+
     for adjacent in adjacents:
         insertNode(adjacent)
+    
     print("border:", end=" ")
     for no in border:
-        print(no.station, end=" ")
+        print(no[0].station, end=" ")
     print("")
 
 n = goal
@@ -92,8 +91,7 @@ for node in path:
     if node[0].station == n:
         realPath.insert(0, node[0].station)
         n = node[1].station
-    print(node[0].station)
 
 print("path:", end=" ")
 for i in realPath:
-    print(i, end=" ")
+    print(i+1, end=" ")
