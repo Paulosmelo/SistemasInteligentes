@@ -1,8 +1,8 @@
 #Node representado um estado por exemplo:  estação 5 linha azul e a custo em tempo atual
 class Node:
-    station = ""
-    distance = 0
-    line = ""
+    station = 0
+    time = 0
+    line = 0
 
     def __init__(self, station, time, line):
         self.station = station
